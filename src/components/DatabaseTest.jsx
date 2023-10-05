@@ -19,33 +19,28 @@ export function DatabaseTest() {
   */
 
   /* READ, 가져오기 */
+  const getUsers = async () => {
+    const data = await getDocs(usersCollection); //READ - getDocs 이용
+    //   console.log(data);
+
+    setUsers(
+      data.docs.map((doc) => {
+        return { ...doc.data(), id: doc.id };
+      })
+    );
+  };
+  //   useEffect를 이용해서 렌더링될 때마다 실행되지 않도록
   useEffect(() => {
-    const getUsers = async () => {
-      const data = await getDocs(usersCollection); //READ - getDocs 이용
-      //   console.log(data);
-
-      setUsers(
-        data.docs.map((doc) => {
-          return { ...doc.data(), id: doc.id };
-        })
-      );
-    };
-
-    // console.log(users);
     getUsers();
     console.log('test');
+    console.log(users.length);
+    /* 
+    (진형) 나중 삭제 
+    users 를 넣지 않고 생성 버튼 눌렀을 때 바로 적용할 수 있는 방법이 있을ㄲ  ㅏ?
+    새로 받아와서 
+    
+    */
   }, []);
-
-  //   useEffect(async () => {
-  //     const data = await getDocs(usersCollection); //READ - getDocs 이용
-  //     console.log(data);
-
-  //     setUsers(
-  //       data.docs.map((doc) => {
-  //         return { ...doc.data(), id: doc.id };
-  //       })
-  //     );
-  //   }, [users]);
 
   /* CREATE, 생성 */
   const createUser = async () => {
@@ -66,6 +61,7 @@ export function DatabaseTest() {
     const delDoc = doc(db, 'User', id);
     await deleteDoc(delDoc);
   };
+
   return (
     <>
       <h1>firebase Database CRUD test</h1>
@@ -80,6 +76,7 @@ export function DatabaseTest() {
           </div>
         );
       })}
+
       <input
         type='text'
         placeholder='이름'
@@ -102,8 +99,7 @@ export function DatabaseTest() {
         }}
       />
 
-      {/* user 생성 버튼입니다.
-       */}
+      {/* user 생성 버튼입니다. */}
       <button
         onClick={() => {
           if (newGender === '남' || newGender === '여') {
