@@ -1,7 +1,7 @@
 /** @format */
 import { useState, useEffect } from 'react';
 import { db } from '../firebase-config';
-import { addDoc, collection, deleteDoc, doc, getDocs, updateDoc } from 'firebase/firestore';
+import { addDoc, collection, deleteDoc, doc, getDocs, setDoc, updateDoc } from 'firebase/firestore';
 
 export function DatabaseTest() {
   const [users, setUsers] = useState([]);
@@ -44,13 +44,22 @@ export function DatabaseTest() {
 
   /* CREATE, 생성 */
   const createUser = async () => {
-    // 첫번째 인자: 어떤 collection 에 추가할지
-    // 두번째 인자: 해당 collection 에 추가할 정보
-    await addDoc(usersCollection, {
+    const newData = {
       userName: newName,
       phoneNumber: newPhoneNumber,
       gender: newGender === '남' ? true : false,
-    });
+    };
+    const newDoc = doc(db, usersCollection, 'new-ID');
+    // console.log(newDoc);
+    /* addDoc( , ) */
+    // 첫번째 인자: 어떤 collection에 추가할지
+    // 두번째 인자: 해당 collection에 추가할 정보
+    await addDoc(usersCollection, newData);
+
+    /* setDoc(doc(...), ) */
+    // 첫번째 인자: doc() 을 이용해 collection과 추가할 id 정보
+    // 두번째 인자: collection에 추가할 정보
+    // await setDoc(newDoc, newData);
   };
 
   /* UPDATE, 수정 */
