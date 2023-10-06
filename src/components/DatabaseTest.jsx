@@ -46,11 +46,16 @@ export function DatabaseTest() {
   const createUser = async () => {
     // 첫번째 인자: 어떤 collection 에 추가할지
     // 두번째 인자: 해당 collection 에 추가할 정보
-    await addDoc(usersCollection, { userName: newName, phoneNumber: newPhoneNumber, gender: newGender === '남' ? true : false });
+    await addDoc(usersCollection, {
+      userName: newName,
+      phoneNumber: newPhoneNumber,
+      gender: newGender === '남' ? true : false,
+    });
   };
 
   /* UPDATE, 수정 */
   const updateUser = async (id, name) => {
+    // User collection 에서 id
     const userDoc = doc(db, 'User', id);
     const updateField = { userName: name };
     await updateDoc(userDoc, updateField);
@@ -78,22 +83,22 @@ export function DatabaseTest() {
       })}
 
       <input
-        type='text'
-        placeholder='이름'
+        type="text"
+        placeholder="이름"
         onChange={(event) => {
           setNewName(event.target.value);
         }}
       />
       <input
-        type='phoneNumber'
-        placeholder='010-xxxx-xxxx'
+        type="phoneNumber"
+        placeholder="010-xxxx-xxxx"
         onChange={(event) => {
           setNewPhoneNumber(event.target.value);
         }}
       />
       <input
-        type='gender'
-        placeholder='남/여 로만 써주세요'
+        type="gender"
+        placeholder="남/여 로만 써주세요"
         onChange={(event) => {
           setNewGender(event.target.value);
         }}
@@ -107,7 +112,8 @@ export function DatabaseTest() {
           } else {
             alert('성별을 남/여 중 하나로만 작성해주세요.');
           }
-        }}>
+        }}
+      >
         Create User
       </button>
       <hr />
