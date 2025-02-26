@@ -21,7 +21,6 @@ export function DatabaseTest() {
   /* READ, 가져오기 */
   const getUsers = async () => {
     const data = await getDocs(usersCollection); //READ - getDocs 이용
-    //   console.log(data);
 
     setUsers(
       data.docs.map((doc) => {
@@ -34,6 +33,8 @@ export function DatabaseTest() {
     getUsers();
     console.log('test');
     console.log(users.length);
+
+    // console.log(users);
     /* 
     (진형) 나중 삭제 
     users 를 넣지 않고 생성 버튼 눌렀을 때 바로 적용할 수 있는 방법이 있을ㄲ  ㅏ?
@@ -43,23 +44,50 @@ export function DatabaseTest() {
   }, []);
 
   /* CREATE, 생성 */
+  // >> addDoc과 setDoc으로 추가할 수 있음!
   const createUser = async () => {
     const newData = {
       userName: newName,
       phoneNumber: newPhoneNumber,
       gender: newGender === '남' ? true : false,
     };
-    const newDoc = doc(db, usersCollection, 'new-ID');
     // console.log(newDoc);
     /* addDoc( , ) */
+    // addDoc은 id 자동 생성됨
+
     // 첫번째 인자: 어떤 collection에 추가할지
     // 두번째 인자: 해당 collection에 추가할 정보
     await addDoc(usersCollection, newData);
+    /* 
+    {
+      id: "H9pOKLAUn4BAEG4C6Ay1",
+      gender: "여",
+      phoneNumber: "010-xxxx-xxxx",
+      userName: "allie"
+    }
+    */
 
     /* setDoc(doc(...), ) */
+    // setDoc은 원하는 값으로 id값 추가할 수 있음
+
     // 첫번째 인자: doc() 을 이용해 collection과 추가할 id 정보
     // 두번째 인자: collection에 추가할 정보
-    // await setDoc(newDoc, newData);
+    // 데이터가 두 번 등록되지 않도록 주석처리함
+    /* const newDoc = doc(usersCollection, 'new-ID');
+    await setDoc(newDoc, newData); */
+    /* 
+    {
+      id: "new-ID", // 해당 부분은 계속 달라지는 uuid 값 등으로 추가하는게 좋음(임의로 new-ID라고 지정)
+      gender: "남남",
+      phoneNumber: "010-xxxx-xxxx",
+      userName: "allie"
+    }
+    */
+
+    // 프론트 즉시 반영을 위해서
+    setUsers((prev) => {
+      return [...prev, { ...newData, id: users.length }];
+    });
   };
 
   /* UPDATE, 수정 */
